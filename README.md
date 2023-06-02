@@ -7,7 +7,7 @@ Neste repositório descrevo passo à passo como executar um cluster Kubernetes l
 
 **Conteúdo:**
 
-01. [**K3D**](Content/kind/README.md)
+01. [**K3D**](Content/k3d/README.md)
 02. [**LoadBalancer**](Content/metallb/README.md)
 03. [**Metrics Server**](Content/metrics-server/README.md)
 04. [**Kubernetes Dashboard**](Content/dashboard/README.md)
