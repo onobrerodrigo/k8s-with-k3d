@@ -1,7 +1,7 @@
 ## Instalação e Configuração do K3D.
 
 <p align="center">
-  <img width="500" height="350" src="https://d33wubrfki0l68.cloudfront.net/d0c94836ab5b896f29728f3c4798054539303799/9f948/logo/logo.png">
+  <img width="500" height="350" src="https://k3d.io/v5.1.0/static/img/k3d_logo_black_blue.svg">
 </p>
 
 O [**K3D**](https://k3d.io/) é uma ferramenta para executar o Kubernetes em containers [**Docker**](https://docs.docker.com/).
