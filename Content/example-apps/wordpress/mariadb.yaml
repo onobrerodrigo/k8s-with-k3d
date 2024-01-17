@@ -1,0 +1,102 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: wordpress-project
+  labels:
+    app.kubernetes.io/name: 'wordpress-project'
+    app.kubernetes.io/version: 'v0'
+    app.kubernetes.io/part-of: 'wordpress-project'
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wordpress-project-configmap-mariadb
+  namespace: wordpress-project
+  labels:
+    app.kubernetes.io/name: 'mariadb'
+    app.kubernetes.io/version: '10.9.4'
+    app.kubernetes.io/part-of: 'wordpress-project'
+data:
+  MARIADB_ROOT_PASSWORD: 'k3d@#'
+  MARIADB_DATABASE: 'k3d'
+  MARIADB_USER: 'k3d'
+  MARIADB_PASSWORD: 'k3d@#'
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress-project-mariadb
+  namespace: wordpress-project
+  labels:
+    app.kubernetes.io/name: 'mariadb'
+    app.kubernetes.io/version: '10.9.4'
+    app.kubernetes.io/part-of: 'wordpress-project'
+spec:
+  selector:
+    app.kubernetes.io/name: 'mariadb'
+    app.kubernetes.io/version: '10.9.4'
+    app.kubernetes.io/part-of: 'wordpress-project'
+  ports:
+  - name: mariadb-port
+    protocol: TCP
+    port: 3306
+    targetPort: 3306
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: wordpress-project-mariadb
+  namespace: wordpress-project
+  labels:
+    app.kubernetes.io/name: 'mariadb'
+    app.kubernetes.io/version: '10.9.4'
+    app.kubernetes.io/part-of: 'wordpress-project'
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: 'mariadb'
+      app.kubernetes.io/version: '10.9.4'
+      app.kubernetes.io/part-of: 'wordpress-project'
+  serviceName: wordpress-project-mariadb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: 'mariadb'
+        app.kubernetes.io/version: '10.9.4'
+        app.kubernetes.io/part-of: 'wordpress-project'
+    spec:
+      containers:
+      - name: wordpress-project-mariadb
+        image: mariadb:10.9.4
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: wordpress-project-configmap-mariadb
+        ports:
+        - name: mariadb-port
+          containerPort: 3306
+          protocol: TCP
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "200m"
+        volumeMounts:
+        - name: mariadb-data
+          mountPath: /var/lib/mysql/
+  volumeClaimTemplates:
+  - metadata:
+      name: mariadb-data
+    spec:
+      storageClassName: local-path
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi

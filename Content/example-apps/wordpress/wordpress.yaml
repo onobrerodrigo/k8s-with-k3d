@@ -1,0 +1,107 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wordpress-project-configmap-wordpress
+  namespace: wordpress-project
+  labels:
+    app.kubernetes.io/name: 'wordpress'
+    app.kubernetes.io/version: 'latest'
+    app.kubernetes.io/part-of: 'wordpress-project'
+data:
+  WORDPRESS_DB_HOST: 'wordpress-project-mariadb.wordpress-project.svc.cluster.local'
+  WORDPRESS_DB_PASSWORD: 'k3d@#'
+  WORDPRESS_DB_USER: 'k3d'
+  WORDPRESS_DB_NAME: 'k3d'
+  WORDPRESS_DEBUG: '1'
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress-project-service-wordpress
+  namespace: wordpress-project
+  labels:
+    app.kubernetes.io/name: 'wordpress'
+    app.kubernetes.io/version: 'latest'
+    app.kubernetes.io/part-of: 'wordpress-project'
+spec:
+  selector:
+    app.kubernetes.io/name: 'wordpress'
+    app.kubernetes.io/version: 'latest'
+    app.kubernetes.io/part-of: 'wordpress-project'
+  ports:
+  - name: http-port
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  type: ClusterIP
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress-project-deployment-wordpress
+  namespace: wordpress-project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: 'wordpress'
+      app.kubernetes.io/version: 'latest'
+      app.kubernetes.io/part-of: 'wordpress-project'
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: 'wordpress'
+        app.kubernetes.io/version: 'latest'
+        app.kubernetes.io/part-of: 'wordpress-project'
+    spec:
+      dnsPolicy: ClusterFirst
+      containers:
+      - name: wordpress-project-wordpress
+        image: wordpress:latest
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "50m"
+          limits:
+            memory: "512Mi"
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: wordpress-project-configmap-wordpress
+        ports:
+        - name: http-port
+          containerPort: 80
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wordpress-project-ingress-wordpress
+  namespace: wordpress-project
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: "nginx"
+  rules:
+  - host: meudominio.local
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: wordpress-project-service-wordpress
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - meudominio.local
+    secretName: meudominio.local
+status:
+  loadBalancer:
+    ingress:
+    - ip: 172.27.0.30
+---

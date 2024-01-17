@@ -35,31 +35,17 @@ Após alguns minutos será possível consultar as métrics de recursos do seu cl
 
 ```
 ➜ kubectl top nodes
-NAME                        CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%
-kindcluster-control-plane   154m         1%     740Mi           3%
-kindcluster-worker          36m          0%     177Mi           0%
-kindcluster-worker2         42m          0%     182Mi           0%
+NAME                            CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k3d-cl-onobrerodrigo-server-0   102m         1%     887Mi           5%
 ```
 
 ```
 ➜ kubectl top pods --all-namespaces
-NAMESPACE            NAME                                                CPU(cores)   MEMORY(bytes)
-kube-system          coredns-565d847f94-rhtp9                            3m           13Mi
-kube-system          coredns-565d847f94-wq4zz                            2m           13Mi
-kube-system          etcd-kindcluster-control-plane                      29m          42Mi
-kube-system          kindnet-4lnp4                                       2m           8Mi
-kube-system          kindnet-8rbz9                                       1m           8Mi
-kube-system          kindnet-xxqkj                                       1m           8Mi
-kube-system          kube-apiserver-kindcluster-control-plane            50m          291Mi
-kube-system          kube-controller-manager-kindcluster-control-plane   18m          45Mi
-kube-system          kube-proxy-5q5qj                                    1m           10Mi
-kube-system          kube-proxy-9tqvc                                    1m           10Mi
-kube-system          kube-proxy-rrbsh                                    1m           10Mi
-kube-system          kube-scheduler-kindcluster-control-plane            4m           18Mi
-kube-system          metrics-server-55dd79d7bf-9qswk                     4m           18Mi
-local-path-storage   local-path-provisioner-684f458cdd-cc8cr             1m           7Mi
-metallb-system       controller-84d6d4db45-6hh7w                         2m           17Mi
-metallb-system       speaker-2z4lb                                       5m           15Mi
-metallb-system       speaker-tpwnh                                       5m           17Mi
-metallb-system       speaker-wm7lc                                       5m           17Mi
+NAMESPACE        NAME                                        CPU(cores)   MEMORY(bytes)   
+default          ingress-nginx-controller-5b5848f778-2lwwl   3m           166Mi           
+kube-system      coredns-77ccd57875-mttht                    3m           14Mi            
+kube-system      local-path-provisioner-957fdf8bc-mvm2c      1m           8Mi             
+kube-system      metrics-server-648b5df564-j29ks             9m           18Mi            
+metallb-system   controller-565ccc769f-skpkn                 2m           17Mi            
+metallb-system   speaker-tdn96                               3m           17Mi
 ```

@@ -2,45 +2,50 @@
 
 Aqui disponibilizo de forma rápida uma aplicação de fácil instalação e que proporciona um cenário bom para estudos sobre Kubernetes.
 
-**Rocket.Chat**
+**Wordpress**
 
-O [`Rocket.Chat`](https://rocket.chat/) é uma plataforma de comunicação de código aberto. Uma alternativa ao Slack.
+O [`Wordpress`](https://wordpress.org/) é sem dúvidas o CMS mais utilizado na internet.
 
-Instale o repositório contendo o Helm Chart.
+Para executar o Wordpress corretamente, primeiro execute o `yaml` do `MariaDB`.
 ```bash
-helm repo add rocketchat https://rocketchat.github.io/helm-charts
+kubectl create -f mariadb.yaml
 ```
+Aguarde até que o pod do `MariaDB` esteja disponível.
 
-Instale o `Rocket.Chat`.
+Validado que o pod esteja executando, vamos agora executar o `yaml` do `Wordpress`.
+
 ```bash
-helm upgrade --install rocketchat rocketchat/rocketchat \
-    --version 3.1.0 \
-    --create-namespace \
-    --namespace rocketchat \
-    --values Content/example-apps/rocketchat/rocketchat.yaml
-kubectl wait --for condition=Available=True deploy/rocketchat-rocketchat --namespace rocketchat --timeout -1s
-kubectl wait --for condition=ready pod/rocketchat-mongodb-0 --namespace rocketchat --timeout -1s
+kubectl create -f wordpress.yaml
 ```
-> Confira o arquivo `rocketchat.yaml` para entender ou modificar as configurações.
+Aguarde até que os pod do `Wordpress` esteja disponpivel.
 
-No arquivo `rocketchat.yaml` o parâmetro `host` recebe o valor `chat.meudominio.local`. Sendo assim, você precisa adicionar no `/etc/host` do seu computador a entrada abaixo:
+> Confira o arquivo `mariadb.yaml` e `wordpress.yaml` para entender ou modificar as configurações que desejar.
+
+No arquivo `wordpress.yaml` no objeto do ingress, o parâmetro `host` recebe o valor `meudominio.local`. Sendo assim, você precisa adicionar no `/etc/host` do seu computador a entrada abaixo:
 
 ```
-172.18.0.10 chat.meudominio.local
+172.27.0.30 meudominio.local
 ```
-> O IP acima, `172.18.0.10` é o IP atribuído ao LoadBalancer do Nginx Ingress Controller.
+> O IP acima, `172.27.0.30` é o IP atribuído ao LoadBalancer do Nginx Ingress Controller.
 
 Para consultar qual IP atribuído ao LoadBalancer do Nginx Ingress Controller execute o comando abaixo:
 
 ```bash
 kubectl get service --namespace ingress-nginx ingress-nginx-controller
 ```
+Se o Ingress estiver sido instalado atráves do `yaml`
+
+ou
+```bash
+kubectl get service --namespace default ingress-nginx-controller
+```
+Se o Ingress foi instalado a partir do `Helm`.
 
 O resultado será semelhante a este mostrado abaixo:
 
 ```
 NAME                       TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                      AGE
-ingress-nginx-controller   LoadBalancer   10.96.122.185   172.18.0.10   80:31598/TCP,443:30455/TCP   170m
+ingress-nginx-controller   LoadBalancer   10.96.122.185   172.27.0.30   80:31598/TCP,443:30455/TCP   170m
 ```
 
 Pronto, o IP mostrado no `EXTERNAL-IP` será o IP que você utilizará como entrada de acesso para as aplicações.
