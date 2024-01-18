@@ -35,10 +35,10 @@ subjects:
 EOF
 ```
 
-Para acessar o dashboard é preciso recuperar o token do usuário ```admin-user```. Execute o comando abaixo e copie o token.
+Para acessar o dashboard é preciso gerar um token do usuário ```admin-user```. Execute o comando abaixo e copie o token.
 
 ```bash
-kubectl --namespace kubernetes-dashboard describe secret $(kubectl --namespace kubernetes-dashboard get secret | grep admin-user | awk '{print $1}')
+kubectl -n kubernetes-dashboard create token admin-user
 ```
 
 Inicialize o proxy para acesso ao dashboard com o comando ```kubectl proxy```.
