@@ -32,7 +32,7 @@ Um exemplo prático disso é executar o comando abaixo que irá subir um único 
 k3d cluster create cl-onobrerodrigo --k3s-arg "--disable=traefik@server:*" --k3s-arg "--disable=servicelb@server:*"
 ```
 
-- O cluster foi criado sem o trafik e sem o servicelb, pois iremos usar outros serviços no lugar.
+- O cluster foi criado sem o `traefik` e sem o `servicelb`, pois iremos usar outros serviços no lugar.
 
 Após criado, verifique o cluster e seu único nó.
 
