@@ -12,13 +12,7 @@ Dessa forma podemos trabalhar com recursos do tipo [**Ingress**](https://kuberne
 
 A implantação padrão do **Nginx Ingress Controller** é bem simples, bastando executar o comando abaixo:
 ```bash
-kubectl apply --filename https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.7.1/deploy/static/provider/cloud/deploy.yaml
-```
-
-Você pode também implantar o Nginx Ingress Controller a partir do manifesto [`nginx-ingress-controller-v1.64.yaml`](nginx-ingress-controller-v1.7.1.yaml) contido neste repositório na qual incluí apenas um [`default backend`](https://kubernetes.github.io/ingress-nginx/user-guide/default-backend/) customizado.
-
-```bash
-kubectl apply --filename nginx-ingress-controller-v1.7.1.yaml
+kubectl apply --filename https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.3/deploy/static/provider/cloud/deploy.yaml
 ```
 
 Verifique se o serviço `ingress-nginx-controller` pegou o IP do pool `development` configurado no `MetalLB`.
@@ -29,7 +23,7 @@ kubectl get service --namespace ingress-nginx ingress-nginx-controller
 O resultado será semelhante a este abaixo:
 ```
 NAME                       TYPE           CLUSTER-IP    EXTERNAL-IP    PORT(S)                      AGE
-ingress-nginx-controller   LoadBalancer   10.96.37.60   172.27.0.30   80:31193/TCP,443:30981/TCP   59s
+ingress-nginx-controller   LoadBalancer   10.96.37.60   172.19.0.30   80:31193/TCP,443:30981/TCP   59s
 ```
 
 No browser, informe o IP mostrado no `EXTERNAL-IP` e você será redirecionado para o `default backend` que apenas mostra uma tela com 404. Está funcional.
@@ -49,10 +43,10 @@ helm repo update
 ```
 E por final:
 ```bash
- helm install ingress-nginx ingress-nginx/ingress-nginx --version 4.6.1
+ helm install ingress-nginx ingress-nginx/ingress-nginx --namespace ingress-nginx --create-namespace --version 4.10.3
  ```
 
- Essa versão do Ingress Controller é compativel com as versões 1.27, 1.26, 1.25, 1.24 do Kubernetes.
+ Essa versão do Nginx Ingress Controller é compativel com as versões 1.30, 1.29, 1.28, 1.27 e 1.26 do Kubernetes.
 
  E finalmente, verifique se o serviço `ingress-nginx-controller` pegou o IP do pool `development` configurado no `MetalLB`.
 ```bash
@@ -62,5 +56,5 @@ kubectl get service --namespace default ingress-nginx-controller
 O resultado será semelhante a este abaixo:
 ```
 NAME                       TYPE           CLUSTER-IP    EXTERNAL-IP    PORT(S)                      AGE
-ingress-nginx-controller   LoadBalancer   10.96.37.60   172.27.0.30   80:31193/TCP,443:30981/TCP   59s
+ingress-nginx-controller   LoadBalancer   10.96.37.60   172.19.0.30   80:31193/TCP,443:30981/TCP   59s
 ```

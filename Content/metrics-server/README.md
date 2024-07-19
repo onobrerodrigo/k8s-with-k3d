@@ -36,13 +36,13 @@ Após alguns minutos será possível consultar as métrics de recursos do seu cl
 ```
 ➜ kubectl top nodes
 NAME                            CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
-k3d-cl-onobrerodrigo-server-0   102m         1%     887Mi           5%
+k3d-cl-onobre-server-0   102m         1%     887Mi           5%
 ```
 
 ```
 ➜ kubectl top pods --all-namespaces
 NAMESPACE        NAME                                        CPU(cores)   MEMORY(bytes)   
-default          ingress-nginx-controller-5b5848f778-2lwwl   3m           166Mi           
+ingress-nginx          ingress-nginx-controller-5b5848f778-2lwwl   3m           166Mi           
 kube-system      coredns-77ccd57875-mttht                    3m           14Mi            
 kube-system      local-path-provisioner-957fdf8bc-mvm2c      1m           8Mi             
 kube-system      metrics-server-648b5df564-j29ks             9m           18Mi            

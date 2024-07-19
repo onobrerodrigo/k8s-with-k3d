@@ -29,7 +29,7 @@ k3d version
 Um exemplo prático disso é executar o comando abaixo que irá subir um único node.
 
 ```bash
-k3d cluster create cl-onobrerodrigo --k3s-arg "--disable=traefik@server:*" --k3s-arg "--disable=servicelb@server:*"
+k3d cluster create cl-onobre --k3s-arg "--disable=traefik@server:*" --k3s-arg "--disable=servicelb@server:*"
 ```
 
 - O cluster foi criado sem o `traefik` e sem o `servicelb`, pois iremos usar outros serviços no lugar.
@@ -43,7 +43,7 @@ k3d cluster list
 Esse precisa ser o resultado:
 ```bash
 NAME               SERVERS   AGENTS   LOADBALANCER
-cl-onobrerodrigo   1/1       0/0      true
+cl-onobre   1/1       0/0      true
 ```
 > Utilize o **help** do k3d para entender todas as possibilidades de uso.
 
