@@ -9,21 +9,21 @@ Verifique qual é a rede do Docker que o `k3d` está utilizando.
 docker network inspect k3d-cl-onobrerodrigo | jq '.[].IPAM | .Config | .[0].Subnet' | cut -d \" -f 2
 ```
 
-No meu caso, o resultado foi `172.27.0.0/16`. Sabendo disso, irei alocar apenas um IP dessa faixa de rede para ser utilizado no `Ingress Controller`:
+No meu caso, o resultado foi `172.19.0.0/16`. Sabendo disso, irei alocar apenas um IP dessa faixa de rede para ser utilizado no `Ingress Controller`:
 ```
-172.27.0.30/32
+172.19.0.30/32
 ```
 Em alguns cenários se faz necessário alocar um range de IPs e isso pode ser feito da seguinte forma:
 ```
-172.27.0.30-172.27.0.35
+172.19.0.30-172.19.0.35
 ```
 Dessa forma tenho um range de 5 IPs para serem alocados para serviços do tipo `LoadBalancer`.
 
 ---
 
-Implante o MetalLB `v0.13.12`:
+Implante o MetalLB `v0.14.7`:
 ```bash
-kubectl create --filename https://raw.githubusercontent.com/metallb/metallb/v0.13.12/config/manifests/metallb-native.yaml
+kubectl create --filename https://raw.githubusercontent.com/metallb/metallb/v0.14.7/config/manifests/metallb-native.yaml
 ```
 
 Aguarde até que os pods `controller` e `speakers`, no namespace `metallb-system`, estejam prontos:
@@ -44,7 +44,7 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-  - 172.27.0.30/32
+  - 172.19.0.30-172.19.0.35
 
 ---
 
